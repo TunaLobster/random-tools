@@ -3,14 +3,14 @@ import numpy as np
 from matplotlib.widgets import Slider, Button
 
 # aircraft characateristics
-groundspeed = 28  # m/s
+groundspeed = 20  # m/s
 pressure = 101300.0  # pascals
 tempK = 15 + 273.15  # Kelvin
 
 # ArduPilot parameters
 L1_damp = 0.85
 L1_period = 25
-WP_radius = 200  # meters
+WP_radius = 100  # meters
 
 dist_min = 0
 L1_dist = max(0.3183099 * L1_damp * L1_period * groundspeed, dist_min)
@@ -48,13 +48,12 @@ fig, ax = plt.subplots()
 line, = plt.plot(turn_angle_plot, f(turn_angle_plot, groundspeed, pressure, tempK, L1_damp, L1_period, WP_radius), label="Start turn distance")
 l1_dist_line, = plt.plot(turn_angle_plot, f_L1_dist(turn_angle_plot, groundspeed, L1_damp, L1_period), label="L1_dist {:.2f} m".format(L1_dist))
 wp_radius_line, = plt.plot(turn_angle_plot, f_wp_radius(turn_angle_plot), label="WP_RADIUS {:.2f} m".format(WP_radius))
-# ax.hlines(WP_radius, min(turn_angle_plot), max(turn_angle_plot), label="WP_RADIUS")
 
-# make room for slider
-plt.subplots_adjust(bottom=0.25)
+# make room for sliders
+plt.subplots_adjust(bottom=0.32)
 
 # Make a horizontal slider to control the groundspeed.
-axgroundspeed = plt.axes([0.25, 0.1, 0.65, 0.03])
+axgroundspeed = plt.axes([0.25, 0.2, 0.65, 0.02])
 groundspeed_slider = Slider(
     ax=axgroundspeed,
     label="Groundspeed [m/s]",
@@ -63,14 +62,45 @@ groundspeed_slider = Slider(
     valinit=groundspeed,
 )
 
-# The function to be called anytime a slider's value changes
+
+# make a horizontal slider to control the L1_damping
+axl1damping = plt.axes([0.25, 0.15, 0.65, 0.02])
+L1damping_slider = Slider(
+    ax=axl1damping,
+    label="NAVL1_DAMPING",
+    valmin=0.5,
+    valmax=1,
+    valinit=L1_damp,
+)
+
+
+# make a horizontal slider to control the L1_period
+axl1period = plt.axes([0.25, 0.1, 0.65, 0.02])
+l1period_slider = Slider(
+    ax=axl1period,
+    label="NAVL1_PERIOD",
+    valmin=5,
+    valmax=75,
+    valinit=L1_period,
+)
+
+
+# make a horizontal slider to control the wp_radius
+axwpradius = plt.axes([0.25, 0.05, 0.65, 0.02])
+wpradius_slider = Slider(
+    ax=axwpradius,
+    label="WP_RADIUS [m]",
+    valmin=100,
+    valmax=550,
+    valinit=WP_radius,
+)
 
 
 def update(val):
-    line.set_ydata(f(turn_angle_plot, groundspeed_slider.val, pressure, tempK, L1_damp, L1_period, WP_radius))
-    ax.set_title("Groundspeed = {:.2f} m/s,\nNAVL1_DAMPING = {}, NAVL1_PERIOD = {}".format(groundspeed_slider.val, L1_damp, L1_period, WP_radius))
-    l1_dist_line.set_ydata(f_L1_dist(turn_angle_plot, groundspeed_slider.val, L1_damp, L1_period,))
-    l1_dist_line.set(label = "L1_dist {:.2f} m".format(get_L1_dist(groundspeed_slider.val, L1_damp, L1_period)))
+    line.set_ydata(f(turn_angle_plot, groundspeed_slider.val, pressure, tempK, L1damping_slider.val, l1period_slider.val, wpradius_slider.val))
+    # ax.set_title("Groundspeed = {:.2f} m/s,\nNAVL1_DAMPING = {}, NAVL1_PERIOD = {}".format(groundspeed_slider.val, L1damping_slider.val, l1period_slider.val, wpradius_slider.val))
+    l1_dist_line.set_ydata(f_L1_dist(turn_angle_plot, groundspeed_slider.val, L1damping_slider.val, l1period_slider.val))
+    l1_dist_line.set(label = "L1_dist {:.2f} m".format(get_L1_dist(groundspeed_slider.val, L1damping_slider.val, l1period_slider.val)))
     wp_radius_line.set_ydata(f_wp_radius(turn_angle_plot))
     ax.set_ylim(auto=True)
     ax.set_autoscale_on(True)
@@ -83,7 +113,7 @@ def update(val):
 groundspeed_slider.on_changed(update)
 
 # Create a `matplotlib.widgets.Button` to reset the sliders to initial values.
-resetax = plt.axes([0.8, 0.025, 0.1, 0.04])
+resetax = plt.axes([0.8, 0.005, 0.1, 0.04])
 button = Button(resetax, 'Reset', hovercolor='0.975')
 
 
@@ -93,7 +123,9 @@ def reset(event):
 
 button.on_clicked(reset)
 
-ax.set_title("Groundspeed = {:.2f} m/s,\nNAVL1_DAMPING = {}, NAVL1_PERIOD = {}".format(groundspeed, L1_damp, L1_period, WP_radius))
+# ax.set_title("Groundspeed = {:.2f} m/s,\nNAVL1_DAMPING = {}, NAVL1_PERIOD = {}".format(groundspeed, L1_damp, L1_period, WP_radius))
+ax.set_title("Tuning ArduPilot L1")
+ax.grid(True)
 ax.legend(loc="lower right")
 ax.set_xlabel("Bearing change after completeing next waypoint [deg]")
 ax.set_ylabel("Disantance from current waypoint\nwhere the turn will start [m]")
