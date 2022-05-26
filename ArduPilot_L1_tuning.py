@@ -3,14 +3,14 @@ import numpy as np
 from matplotlib.widgets import Slider, Button
 
 # aircraft characateristics
-groundspeed = 20  # m/s
+groundspeed = 77  # m/s
 pressure = 101300.0  # pascals
 tempK = 15 + 273.15  # Kelvin
 
 # ArduPilot parameters
 L1_damp = 0.85
 L1_period = 25
-WP_radius = 100  # meters
+WP_radius = 250  # meters
 
 dist_min = 0
 L1_dist = max(0.3183099 * L1_damp * L1_period * groundspeed, dist_min)
