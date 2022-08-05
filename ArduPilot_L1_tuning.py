@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.widgets import Slider, Button
 
-# aircraft characateristics
+# aircraft characteristics
 groundspeed = 77  # m/s
 pressure = 101300.0  # pascals
 tempK = 15 + 273.15  # Kelvin
