@@ -1,9 +1,8 @@
-import json
 import requests
 from operator import itemgetter
 
-pr_search = json.loads(requests.get("https://api.github.com/search/issues?q=is:pr%20label:DevCallTopic%20org:ArduPilot").content)
-issue_search = json.loads(requests.get("https://api.github.com/search/issues?q=is:issue%20label:DevCallTopic%20org:ArduPilot").content)
+pr_search = requests.get("https://api.github.com/search/issues?q=is:pr%20label:DevCallTopic%20org:ArduPilot").json()
+issue_search = requests.get("https://api.github.com/search/issues?q=is:issue%20label:DevCallTopic%20org:ArduPilot").json()
 
 # sort the PRs oldest to newest based on PR number
 pr_sorted = sorted(pr_search["items"], key=itemgetter("number"))
