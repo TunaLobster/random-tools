@@ -4,14 +4,16 @@
 
 
 # 11-35 receptacles for CAN/serial/12V power/other things
-a = [['MS'],  # milspec
-     ['27466', '27468', '27656'],  # ms number
-     ['E'],  # service class
-     ['11'],  # shell size
-     ['B'],  # shell finish
-     ['35'],  # arrangement
-     ['S'],  # contacts
-     ['']]  # keying
+a = [
+    ["MS"],  # milspec
+    ["27466", "27468", "27656"],  # ms number
+    ["E"],  # service class
+    ["11"],  # shell size
+    ["B"],  # shell finish
+    ["35"],  # arrangement
+    ["S"],  # contacts
+    [""],
+]  # keying
 
 # 9-98 receptacles for servos with size 20 contacts
 # a = [['MS'],  # milspec
@@ -70,7 +72,7 @@ a = [['MS'],  # milspec
 #      ['08', '8', '10', '18'],  # shell size
 #      ['A', 'W', 'N']]  # finish
 
-'''
+"""
 These are a bunch of ones in a different syntax. Easy to convert
 # 11-35 plugs for CAN/serial/12V power/other things
 milspec = ['MS']
@@ -154,7 +156,7 @@ shell_finish = ['A', 'B', 'C', 'E', 'F']
 arrangement = ['35']
 contacts = ['P']
 keying = ['']
-'''
+"""
 
 # concatenate a string for each combo with a bit of recursion
 part_numbers = []
@@ -168,7 +170,8 @@ def combine(terms, accum):
         else:
             combine(terms[1:], item)
 
-if __name__ == '__main__':
-    combine(a, '')
+
+if __name__ == "__main__":
+    combine(a, "")
     for part_number in part_numbers:
         print(part_number)

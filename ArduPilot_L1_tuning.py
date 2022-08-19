@@ -36,7 +36,7 @@ def f_wp_radius(x, wp_radius):
 
 
 def turn_distance(turn_angle, wp_radius, eas2tas, L1_dist):
-    distance_90 = min(wp_radius * eas2tas ** 2, L1_dist)
+    distance_90 = min(wp_radius * eas2tas**2, L1_dist)
     if turn_angle >= 90:
         return distance_90
     return distance_90 * turn_angle / 90.0
@@ -45,9 +45,21 @@ def turn_distance(turn_angle, wp_radius, eas2tas, L1_dist):
 turn_angle_plot = np.linspace(0, 100, 300)
 
 fig, ax = plt.subplots()
-line, = plt.plot(turn_angle_plot, f(turn_angle_plot, groundspeed, pressure, tempK, L1_damp, L1_period, WP_radius), label="Start turn distance")
-l1_dist_line, = plt.plot(turn_angle_plot, f_L1_dist(turn_angle_plot, groundspeed, L1_damp, L1_period), label="L1_dist {:.2f} m".format(L1_dist))
-wp_radius_line, = plt.plot(turn_angle_plot, f_wp_radius(turn_angle_plot, WP_radius), label="WP_RADIUS {:.2f} m".format(WP_radius))
+(line,) = plt.plot(
+    turn_angle_plot,
+    f(turn_angle_plot, groundspeed, pressure, tempK, L1_damp, L1_period, WP_radius),
+    label="Start turn distance",
+)
+(l1_dist_line,) = plt.plot(
+    turn_angle_plot,
+    f_L1_dist(turn_angle_plot, groundspeed, L1_damp, L1_period),
+    label="L1_dist {:.2f} m".format(L1_dist),
+)
+(wp_radius_line,) = plt.plot(
+    turn_angle_plot,
+    f_wp_radius(turn_angle_plot, WP_radius),
+    label="WP_RADIUS {:.2f} m".format(WP_radius),
+)
 
 # make room for sliders
 plt.subplots_adjust(bottom=0.32)
@@ -97,11 +109,34 @@ wpradius_slider = Slider(
 
 
 def update(val):
-    line.set_ydata(f(turn_angle_plot, groundspeed_slider.val, pressure, tempK, l1damping_slider.val, l1period_slider.val, wpradius_slider.val))
-    l1_dist_line.set_ydata(f_L1_dist(turn_angle_plot, groundspeed_slider.val, l1damping_slider.val, l1period_slider.val))
-    l1_dist_line.set(label = "L1_dist {:.2f} m".format(get_L1_dist(groundspeed_slider.val, l1damping_slider.val, l1period_slider.val)))
+    line.set_ydata(
+        f(
+            turn_angle_plot,
+            groundspeed_slider.val,
+            pressure,
+            tempK,
+            l1damping_slider.val,
+            l1period_slider.val,
+            wpradius_slider.val,
+        )
+    )
+    l1_dist_line.set_ydata(
+        f_L1_dist(
+            turn_angle_plot,
+            groundspeed_slider.val,
+            l1damping_slider.val,
+            l1period_slider.val,
+        )
+    )
+    l1_dist_line.set(
+        label="L1_dist {:.2f} m".format(
+            get_L1_dist(
+                groundspeed_slider.val, l1damping_slider.val, l1period_slider.val
+            )
+        )
+    )
     wp_radius_line.set_ydata(f_wp_radius(turn_angle_plot, wpradius_slider.val))
-    wp_radius_line.set(label = "WP_RADIUS {:.2f} m".format(wpradius_slider.val))
+    wp_radius_line.set(label="WP_RADIUS {:.2f} m".format(wpradius_slider.val))
     ax.relim()
     ax.autoscale_view()
     ax.legend(loc="lower right")
@@ -117,7 +152,7 @@ wpradius_slider.on_changed(update)
 
 # Create a `matplotlib.widgets.Button` to reset the sliders to initial values.
 resetax = plt.axes([0.8, 0.005, 0.1, 0.04])
-resetbutton = Button(resetax, 'Reset', hovercolor='0.975')
+resetbutton = Button(resetax, "Reset", hovercolor="0.975")
 
 
 def reset(event):
@@ -129,10 +164,9 @@ def reset(event):
 
 resetbutton.on_clicked(reset)
 
-# ax.set_title("Groundspeed = {:.2f} m/s,\nNAVL1_DAMPING = {}, NAVL1_PERIOD = {}".format(groundspeed, L1_damp, L1_period, WP_radius))
 ax.set_title("Tuning ArduPilot L1")
 ax.grid(True)
 ax.legend(loc="lower right")
-ax.set_xlabel("Bearing change after completeing next waypoint [deg]")
-ax.set_ylabel("Disantance from current waypoint\nwhere the turn will start [m]")
+ax.set_xlabel("Bearing change after completing next waypoint [deg]")
+ax.set_ylabel("Distance from current waypoint\nwhere the turn will start [m]")
 plt.show()
