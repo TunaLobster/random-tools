@@ -52,7 +52,7 @@ def check_for_merge_on_ci_pass_passing_ci(pr: dict) -> bool:
     # so this block comment is for using the github api, but I could never get the status of the commit from the api.
     # I think I would have to provide an auth key, but I'm not going to bother with that for something this small.
     # Webscraping it is then!
-    '''
+
     # get last commit sha and owner for the pr
     # pr_number = pr["number"]
     # pr_number = "21347"
@@ -63,7 +63,7 @@ def check_for_merge_on_ci_pass_passing_ci(pr: dict) -> bool:
     # headers = {"accept": "application/vnd.github+json"}
     # test_status = requests.get(f"https://api.github.com/repos/ArduPilot/{pr_repo_name}/statuses/{last_commit_sha}", headers=headers)
     # owner = "blah"
-    '''
+
     pr_number = pr["number"]
     p = PRListParser(pr_number)
     p.feed(cached_merge_on_ci_pass_text)
@@ -72,27 +72,36 @@ def check_for_merge_on_ci_pass_passing_ci(pr: dict) -> bool:
     return False
 
 
+def print_heading_and_list(heading: str, items: list):
+    print(f"\n**{heading}:**", end="\n\n")
+    print("\n".join(items))
+
+# load up all of the pages
+# TO-DO: Check for proper responses
 pr_search = requests.get("https://api.github.com/search/issues?q=is:pr%20label:DevCallTopic%20org:ArduPilot").json()
 issue_search = requests.get("https://api.github.com/search/issues?q=is:issue%20label:DevCallTopic%20org:ArduPilot").json()
 merge_on_ci_pass_search = requests.get("https://api.github.com/search/issues?q=is:pr%20is:open%20label:MergeOnCIPass%20org:ArduPilot").json()
 cached_merge_on_ci_pass_text = requests.get("https://github.com/ArduPilot/ardupilot/pulls?q=is%3Aopen+is%3Apr+label%3AMergeOnCIPass").text
 
-# sort the PRs oldest to newest based on PR number
+# sort oldest to newest based on number
 pr_sorted = sorted(pr_search["items"], key=itemgetter("number"))
+issue_sorted = sorted(issue_search["items"], key=itemgetter("number"))
+merge_on_ci_pass_sorted = sorted(merge_on_ci_pass_search["items"], key=itemgetter("number"))
 
-print("**MergeOnCIPass that has passed CI**", end="\n\n")
-for pr in merge_on_ci_pass_search["items"]:
-    if check_for_merge_on_ci_pass_passing_ci(pr):
-        print(pr["html_url"])
+# create lists of each of the items to show later
+pr_list = [pr["html_url"] for pr in pr_sorted]
+issue_list = [issue["html_url"] for issue in issue_search["items"] if not check_for_label(issue, "ReleaseAdmin")]
+release_admin_list = [issue["html_url"] for issue in issue_search["items"] if check_for_label(issue, "ReleaseAdmin")]
+merge_on_ci_pass_list = [pr["html_url"] for pr in merge_on_ci_pass_sorted if check_for_merge_on_ci_pass_passing_ci(pr)]
 
-print("\n**Pull Requests:**", end="\n\n")
-for pr in pr_sorted:
-    print(pr["html_url"])
+if merge_on_ci_pass_list:
+    print_heading_and_list("MergeOnCIPass that have passed CI", merge_on_ci_pass_list)
 
-print("\n**Issues:**", end="\n\n")
-for issue in [issue for issue in issue_search["items"] if not check_for_label(issue, "ReleaseAdmin")]:
-    print(issue["html_url"])
+if pr_list:
+    print_heading_and_list("Pull Requests", pr_list)
 
-print("\n**Release Admins:**", end="\n\n")
-for release_admin in [issue for issue in issue_search["items"] if check_for_label(issue, "ReleaseAdmin")]:
-    print(release_admin["html_url"])
+if issue_list:
+    print_heading_and_list("Issues", issue_list)
+
+if release_admin_list:
+    print_heading_and_list("Release Admins", release_admin_list)
