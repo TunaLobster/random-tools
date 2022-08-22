@@ -7,7 +7,10 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument(
     "inputfile",
-    help="Path to file to be used as input. If it is in the same directory, just the filename.",  # noqa: E501
+    help=(
+        "Path to file to be used as input. If it is in the same directory, just the"
+        " filename."
+    ),
 )
 parser.add_argument(
     "--split",

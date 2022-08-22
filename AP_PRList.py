@@ -84,28 +84,16 @@ def print_heading_and_list(heading: str, items: list):
 # load up all of the pages
 # TO-DO: Check for proper responses
 pr_search = requests.get(
-    (
-        "https://api.github.com/search/issues?q=is:pr%20label:DevCallTopic%20org",
-        ":ArduPilot",
-    )
+    "https://api.github.com/search/issues?q=is:pr%20label:DevCallTopic%20org:ArduPilot"
 ).json()
 issue_search = requests.get(
-    (
-        "https://api.github.com/search/issues?q=is:issue%20label:DevCallTopic%20",
-        "org:ArduPilot",
-    )
+    "https://api.github.com/search/issues?q=is:issue%20label:DevCallTopic%20org:ArduPilot"
 ).json()
 merge_on_ci_pass_search = requests.get(
-    (
-        "https://api.github.com/search/issues?q=is:pr%20is:open%20label:MergeOnC",
-        "IPass%20org:ArduPilot",
-    )
+    "https://api.github.com/search/issues?q=is:pr%20is:open%20label:MergeOnCIPass%20org:ArduPilot"
 ).json()
 cached_merge_on_ci_pass_text = requests.get(
-    (
-        "https://github.com/ArduPilot/ardupilot/pulls?q=is%3Aopen+is%3Apr+label%",
-        "3AMergeOnCIPass",
-    )
+    "https://github.com/ArduPilot/ardupilot/pulls?q=is%3Aopen+is%3Apr+label%3AMergeOnCIPass"
 ).text
 
 # sort oldest to newest based on number
