@@ -1,0 +1,62 @@
+templates:
+  # templates for CubePilot Standard Carrier board
+  - &connector_type_JSTGH
+    type: JST-GH
+    subtype: 1.25 mm pitch
+    additional_components:
+      -
+        type: JST-GH Crimp Contact
+        mpn: SSHL-002T-P0.2
+        qty_multiplier: populated
+  - &connector_type_JSTGH_3
+    <<: *connector_type_JSTGH
+    mpn: GHR-03V-S
+    pincount: 3
+  - &connector_type_JSTGH_4
+    <<: *connector_type_JSTGH
+    pincount: 4
+    mpn: GHR-04V-S
+  - &connector_type_JSTGH_6
+    <<: *connector_type_JSTGH
+    pincount: 6
+    mpn: GHR-06V-S
+  - &connector_type_JSTGH_8
+    <<: *connector_type_JSTGH
+    pincount: 8
+    mpn: GHR-08V-S
+  - &connector_type_MolexClikMate_6
+    type: Molex Clik-Mate
+    subtype: 2.0 mm pitch
+    pincount: 6
+
+connectors:
+  Cube_I2C2:
+    <<: *connector_type_JSTGH_4
+    pinlabels: [5V, SCL, SDA, GND]
+  Cube_USB:
+    <<: *connector_type_JSTGH_6
+    pinlabels: [5V, D+, D-, GND, BUZZER, BOOTERROR_LED]
+  Cube_GPS2:
+    <<: *connector_type_JSTGH_6
+    pinlabels: [5V, TX, RX, SCL, SDA, GND]
+  Cube_TELEM1:
+    <<: *connector_type_JSTGH_6
+    pinlabels: [5V, TX, RX, CTS, RTS, GND]
+  Cube_ADC:
+    <<: *connector_type_JSTGH_3
+    pinlabels: [5V, SENS, GND]
+  Cube_TELEM2:
+    <<: *connector_type_JSTGH_6
+    pinlabels: [5V, TX, RX, CTS, RTS, GND]
+  Cube_CAN1:
+    <<: *connector_type_JSTGH_4
+    pinlabels: [5V, H, L, GND]
+  Cube_CAN2:
+    <<: *connector_type_JSTGH_4
+    pinlabels: [5V, H, L, GND]
+  Cube_POWER1:
+    <<: *connector_type_MolexClikMate_6
+    pinlabels: [5V_1, 5V_2, CURR_SENS, VOLT_SENS, GND_1, GND_2]
+  Cube_POWER2:
+    <<: *connector_type_MolexClikMate_6
+    pinlabels: [5V_1, 5V_2, CURR_SENS, VOLT_SENS, GND_1, GND_2]
