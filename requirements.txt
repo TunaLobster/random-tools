@@ -1,0 +1,7 @@
+feedparser
+feedgen
+listparser
+pyyaml
+yt-dlp
+matplotlib
+numpy

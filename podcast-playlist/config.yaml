@@ -1,0 +1,58 @@
+playlists:
+- name: Daily
+  sort_order:
+  - tier
+  - roundrobin
+  feeds:
+  - name: The Daily
+    tier: 2
+    sort: newest
+    count: 2
+  - name: Up First
+    tier: 1
+    sort: newest
+    count: 1
+  - name: The Best of Car Talk
+    tier: 3
+    sort: oldest
+    count: 5
+  - name: Wait Wait... Don't Tell Me!
+    tier: 3
+    sort: oldest
+    count: 2
+  - name: Freakonomics
+    tier: 5
+    sort: oldest
+    count: 5
+  - name: Marketplace
+    tier: 1
+    sort: newest
+    count: 1
+  - name: More Perfect
+    tier: 4
+    sort: oldest
+    count: 2
+  - name: Radiolab
+    tier: 4
+    sort: newest
+    count: 2
+  - name: Throughline
+    tier: 5
+    sort: newest
+    count: 2
+  - name: On Point | Podcast
+    tier: 7
+    sort: oldest
+    count: 2
+  - name: Fresh Air
+    tier: 7
+    sort: oldest
+    count: 2
+  - name: The Popcast With Knox and Jamie
+    tier: 7
+    sort: newest
+    count: 2
+  - name: PHPC
+    tier: 10
+    sort: oldest
+    count: 4
